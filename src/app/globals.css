@@ -2,26 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+html{
+  --radio-from: hsl(192, 100%, 67%);
+  --radio-to: hsl(280, 87%, 65%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer components {
+  .card{
+    @apply bg-white text-todo-light dark:text-todo-dark dark:bg-card-dark;
   }
-}
+  .radio + label{
+    @apply relative flex-none w-5 h-5 p-px pb-[0.5px] bg-todo-light dark:bg-todo-dark rounded-full transition-all duration-300 cursor-pointer
+  }
+  .radio + label:hover{
+    @apply bg-gradient-to-r from-[var(--radio-from)] to-[var(--radio-to)]
+  }
+  .radio:checked + label{
+    @apply bg-gradient-to-r from-[var(--radio-from)] to-[var(--radio-to)]
+  }
+  .radio:checked + label > span{
+    @apply hidden
+  }
+  .completed{
+    @apply text-completed-light dark:text-completed-dark
+  }
+  .banner{
+    background-image: url('/images/bg-desktop-light.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .dark .banner{
+    background-image: url('/images/bg-desktop-dark.jpg');
+  }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  @media (max-width: 640px){
+    .banner{
+      background-image: url('/images/bg-mobile-light.jpg');
+    }
+    .dark .banner{
+      background-image: url('/images/bg-mobile-dark.jpg');
+    }
+  }
 }

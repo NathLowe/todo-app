@@ -1,5 +1,9 @@
+import Banner from '@/components/Banner'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import ThemeProvider from '@/providers/ThemeProvider'
+import TodoProvider from '@/providers/TodoProvider'
+import PageProvider from '@/providers/PageProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,8 +18,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <PageProvider>
+      <ThemeProvider>
+        <TodoProvider>
+          <html lang="en">
+            <body className={`${inter.className} w-screen h-screen overflow-hidden bg-body-light dark:bg-body-dark`}>
+              {/* Banner */}
+              <Banner/>
+              <div className="max-w-xl h-full mx-auto relative z-10">
+                {children}
+              </div>
+            </body>
+          </html>
+        </TodoProvider>
+      </ThemeProvider>
+    </PageProvider>
   )
 }
