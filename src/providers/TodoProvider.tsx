@@ -14,12 +14,15 @@ interface TodoState {
     addTodo: (title: string) => void;
     removeTodo: (id: number) => void;
     toggleTodo: (id: number) => void;
+    reorderTodos: (todos:Todo[]) => void;
+    clearCompletedTodos: () => void;
 }
 interface TodoAction {
-    type: 'ADD_TODO' | 'REMOVE_TODO' | 'TOGGLE_TODO';
+    type: 'ADD_TODO' | 'REMOVE_TODO' | 'TOGGLE_TODO' | 'REORDER_TODO' | 'CLEAR_COMPLETED';
     id?: number;
     title?: string;
     completed?: boolean;
+    todos?: Todo[];
 }
 
 const initial : TodoState = {
@@ -27,6 +30,8 @@ const initial : TodoState = {
     addTodo: () => {},
     removeTodo: () => {},
     toggleTodo: () => {},
+    reorderTodos: () => {},
+    clearCompletedTodos: () => {},
 }
 
 const TodoContext = createContext(initial)
@@ -34,6 +39,7 @@ const TodoContext = createContext(initial)
 const reducer = (state:Todo[], action:TodoAction) => {
     let id = action.id? action.id : 1
     let title = action.title? action.title : ''
+    let todos = action.todos? action.todos : []
     let completed = action.completed? action.completed : false
     switch (action.type) {
       case "TOGGLE_TODO":
@@ -48,6 +54,10 @@ const reducer = (state:Todo[], action:TodoAction) => {
         return [...state, { id: id, title: title, completed: false }];
       case "REMOVE_TODO":
         return state.filter((todo) => todo.id!== action.id);
+      case "REORDER_TODO":
+        return todos;
+      case "CLEAR_COMPLETED":
+        return state.filter((todo) =>!todo.completed);
       default:
         return state;
     }
@@ -60,15 +70,21 @@ export default function TodoProvider({
 }) {
     let id = useRef(1)
     const [todos, dispatch] = useReducer(reducer, initial.todos)
-    const addTodo = (title:string) => {
-        dispatch({ type: "ADD_TODO", id: id.current, title, completed: false })
-        id.current += 1
+
+    const actions = {
+        addTodo : (title:string) => {
+            dispatch({ type: "ADD_TODO", id: id.current, title, completed: false })
+            id.current += 1
+        },
+        removeTodo : (id:number) => dispatch({ type: "REMOVE_TODO", id }),
+        toggleTodo : (id:number) => dispatch({ type: "TOGGLE_TODO", id }),
+        reorderTodos : (newOrder:Todo[]) => dispatch({ type: "REORDER_TODO", todos: newOrder }),
+        clearCompletedTodos : () => dispatch({ type: "CLEAR_COMPLETED" }),
     }
-    const removeTodo = (id:number) => dispatch({ type: "REMOVE_TODO", id })
-    const toggleTodo = (id:number) => dispatch({ type: "TOGGLE_TODO", id })
+    
     
   return (
-    <TodoContext.Provider value={{todos,addTodo,removeTodo,toggleTodo}} >
+    <TodoContext.Provider value={{todos,...actions}} >
         {children}
     </TodoContext.Provider>
   )

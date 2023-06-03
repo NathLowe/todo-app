@@ -9,6 +9,9 @@ html{
 }
 
 @layer components {
+  *{
+    @apply transition duration-1000
+  }
   .card{
     @apply bg-white text-todo-light dark:text-todo-dark dark:bg-card-dark;
   }
@@ -27,13 +30,18 @@ html{
   .completed{
     @apply text-completed-light dark:text-completed-dark
   }
-  .banner{
-    background-image: url('/images/bg-desktop-light.jpg');
+  .banner, .banner-dark{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
   }
+  .banner{
+    background-image: url('/images/bg-desktop-light.jpg');
+  }
   .dark .banner{
+    background-image: url('/images/bg-desktop-dark.jpg');
+  }
+  .banner-dark{
     background-image: url('/images/bg-desktop-dark.jpg');
   }
 
@@ -42,6 +50,9 @@ html{
       background-image: url('/images/bg-mobile-light.jpg');
     }
     .dark .banner{
+      background-image: url('/images/bg-mobile-dark.jpg');
+    }
+    .banner-dark{
       background-image: url('/images/bg-mobile-dark.jpg');
     }
   }

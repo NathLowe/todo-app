@@ -6,7 +6,7 @@ import React from 'react'
 
 export default function Footer() {
     let { page, changePage } = usePage()
-    let { todos } = useTodo()
+    let { todos, clearCompletedTodos } = useTodo()
 
     const isActive = (text:string) => text === page
     const handleClick = (text:PageState['page']) => () => changePage(text)
@@ -28,7 +28,7 @@ export default function Footer() {
             }
             
         </div>
-        <div className="hidden sm:block">Clear Completed</div>
+        <div onClick={clearCompletedTodos} className="cursor-pointer hidden sm:block">Clear Completed</div>
     </div>
   )
 }
